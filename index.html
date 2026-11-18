@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanFrameOpti | Оптимизация ПК</title>
+    <style>
+        /* --- БАЗОВЫЕ НАСТРОЙКИ --- */
+        :root {
+            --primary: #00e5ff;
+            --primary-dark: #0088cc;
+            --bg: #050505;
+            --card-bg: rgba(13, 17, 23, 0.85);
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --border: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- АНИМИРОВАННЫЙ ФОН (Микросхемы) --- */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- ШАПКА --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(5, 5, 5, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo-text {
+            font-size: 1.6em;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-nav {
+            padding: 10px 20px;
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-nav:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #000;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #fff;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        /* --- ГЛАВНЫЙ БАННЕР --- */
+        .hero {
+            padding: 100px 20px 60px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- ЗАГОЛОВКИ РАЗДЕЛОВ --- */
+        .section-title {
+            text-align: center;
+            font-size: 2.2em;
+            color: #fff;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        /* --- СЕТКА УСЛУГ --- */
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px 25px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .service-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .service-price {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .service-desc-short {
+            color: var(--text-muted);
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        /* Скрытое полное описание */
+        .service-full-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            border-top: 1px solid transparent;
+        }
+
+        .service-full-details ul {
+            list-style: none;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .service-full-details li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+
+        .service-full-details li::before {
+            content: "▪";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 1.2em;
+            line-height: 1;
+        }
+
+        .service-card.active .service-full-details {
+            max-height: 800px;
+            border-top-color: var(--border);
+        }
+
+        .service-card.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+        }
+
+        /* Кнопка внутри карточки */
+        .btn-card-order {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9em;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-card-order:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+
+        /* --- ПРЕИМУЩЕСТВА (Заполняем пустоту) --- */
+        .features-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .feature-item h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .feature-item p {
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        /* --- БОЛЬШАЯ КНОПКА ВНИЗУ --- */
+        .cta-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(0deg, rgba(0, 229, 255, 0.05) 0%, transparent 100%);
+        }
+
+        .btn-huge {
+            display: inline-block;
+            padding: 20px 60px;
+            background: var(--primary);
+            color: #000;
+            font-size: 1.3em;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+        }
+
+        .btn-huge:hover {
+            background: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.8);
+        }
+
+        /* --- FAQ --- */
+        .faq-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary);
+        }
+
+        .faq-item h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .faq-item p {
+            color: var(--text-muted);
+            font-size: 0.95em;
+        }
+
+        /* --- ПОДВАЛ --- */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.9em;
+            background: rgba(0,0,0,0.8);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .hero h1 { font-size: 2.2em; }
+            .services-container { grid-template-columns: 1fr; }
+            .btn-huge { padding: 15px 30px; font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <header>
+        <a href="#" class="logo-container">
+            <div class="logo-text">CleanFrame<span>Opti</span></div>
+        </a>
+        <div class="nav-buttons">
+            <a href="https://discord.gg/7W7MzS7UPf" target="_blank" class="btn-nav btn-primary">Заказать</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Выжми максимум из своего ПК</h1>
+        <p>Профессиональная оптимизация под Rust. Безопасный тюнинг системы и BIOS.</p>
+    </section>
+
+    <!-- БЛОК ПРЕИМУЩЕСТВ -->
+    <section class="features-section">
+        <div class="feature-item">
+            <h3>Безопасно</h3>
+            <p>Работаем только со встроенными средствами Windows. Никаких сторонних инжекторов и подозрительного софта.</p>
+        </div>
+        <div class="feature-item">
+            <h3>Прозрачно</h3>
+            <p>Вы видите каждое действие через демонстрацию экрана. Мы объясняем, что и зачем делаем.</p>
+        </div>
+        <div class="feature-item">
+            <h3>С гарантией</h3>
+            <p>Если FPS не вырастет на 10%, мы вернем деньги. Вы ничего не теряете.</p>
+        </div>
+    </section>
+
+    <h2 class="section-title" id="services">Наши услуги</h2>
+
+    <section class="services-container">
+        
+        <!-- УСЛУГА 1 -->
+        <div class="service-card" onclick="this.classList.toggle('active')">
+            <div class="service-title">Basic CleanFrame</div>
+            <div class="service-price">350 ₽</div>
+            <div class="service-desc-short">Подойдет для тех, кто не хочет лезть в сложные настройки. Максимум пользы из системы.</div>
+            
+            <div class="service-full-details">
+                <ul>
+                    <li>Полная очистка Windows от мусора, телеметрии и лишних служб.</li>
+                    <li>Отключение фоновых процессов и наложений, мешающих игре.</li>
+                    <li>Настройка схемы электропитания на максимальную производительность.</li>
+                    <li>Правильная настройка файла подкачки (защита от вылетов и фризов при нехватке ОЗУ).</li>
+                    <li>Настройка игры, Steam и Discord для оптимизации игрового процесса в Rust.</li>
+                </ul>
+                <p style="font-size: 0.85em; color: #ffaa00; margin-top: 15px;">* Чаще всего данная услуга не повышает средний FPS, но игра становится плавнее, загрузка быстрее, а кадры стабильнее.</p>
+            </div>
+
+            <a href="https://discord.gg/7W7MzS7UPf" target="_blank" class="btn-card-order" onclick="event.stopPropagation()">Заказать</a>
+        </div>
+
+        <!-- УСЛУГА 2 -->
+        <div class="service-card" onclick="this.classList.toggle('active')">
+            <div class="service-title">Advanced CleanFrame</div>
+            <div class="service-price">700 ₽</div>
+            <div class="service-desc-short">Максимальный выжим из твоего железа. Для тех, кто хочет получить каждый возможный FPS.</div>
+            
+            <div class="service-full-details">
+                <ul>
+                    <li>Всё, что входит в Basic CleanFrame.</li>
+                    <li>Настройка в BIOS: Включение необходимых параметров для максимальной производительности системы.</li>
+                    <li>Настройка оперативной памяти: Включение профилей разгона (XMP/DOCP) для работы на заводской максимальной частоте.</li>
+                    <li>Настройка питания: Безопасное снижение напряжения на процессоре для уменьшения нагрева и шума.</li>
+                    <li>Тестирование стабильности: Прогон стресс-тестов для гарантии отсутствия вылетов.</li>
+                    <li>Переустановка Windows на оптимизированную (убраны ненужные процессы).</li>
+                </ul>
+            </div>
+
+            <a href="https://discord.gg/7W7MzS7UPf" target="_blank" class="btn-card-order" onclick="event.stopPropagation()">Заказать</a>
+        </div>
+
+        <!-- УСЛУГА 3 -->
+        <div class="service-card" onclick="this.classList.toggle('active')">
+            <div class="service-title">Memory Overclock</div>
+            <div class="service-price">1000 ₽</div>
+            <div class="service-desc-short">Для настоящих энтузиастов и тех, кому важна максимальная плавность (1% Low).</div>
+            
+            <div class="service-full-details">
+                <ul>
+                    <li>Всё, что входит в Advanced CleanFrame.</li>
+                    <li>Ручной подбор и настройка первичных и вторичных таймингов оперативной памяти.</li>
+                    <li>Снижение задержек, фризов.</li>
+                    <li>Индивидуальный подбор напряжения (DRAM Voltage) и шины FCLK под ваш процессор.</li>
+                    <li>Обязательный тест стабильности. Гарантия отсутствия вылетов и синих экранов.</li>
+                </ul>
+            </div>
+
+            <a href="https://discord.gg/7W7MzS7UPf" target="_blank" class="btn-card-order" onclick="event.stopPropagation()">Заказать</a>
+        </div>
+
+        <!-- УСЛУГА 4 -->
+        <div class="service-card" onclick="this.classList.toggle('active')">
+            <div class="service-title">FULL OPTIMIZATION</div>
+            <div class="service-price">1300 ₽</div>
+            <div class="service-desc-short">Максимальный пакет «под ключ». Всё, что только можно выжать из вашего ПК.</div>
+            
+            <div class="service-full-details">
+                <ul>
+                    <li>Всё из Basic CleanFrame.</li>
+                    <li>Всё из Advanced CleanFrame.</li>
+                    <li>Всё из Memory Overclock (кастомные тайминги и шина FCLK).</li>
+                    <li>Переустановка Windows под ключ (при необходимости).</li>
+                    <li>Персональная настройка игры: команды Rust и параметры запуска Steam.</li>
+                    <li>Гарантия 100% стабильности: прогон всех стресс-тестов.</li>
+                </ul>
+            </div>
+
+            <a href="https://discord.gg/7W7MzS7UPf" target="_blank" class="btn-card-order" onclick="event.stopPropagation()">Заказать</a>
+        </div>
+
+    </section>
+
+    <section class="cta-section">
+        <a href="https://discord.gg/7W7MzS7UPf" target="_blank" class="btn-huge">Заказать оптимизацию в Discord</a>
+    </section>
+
+    <!-- FAQ (ОТДЕЛЬНЫЙ РАЗДЕЛ) -->
+    <section class="faq-section">
+        <h2 class="section-title">Часто задаваемые вопросы</h2>
+        
+        <div class="faq-item">
+            <h4>Безопасно ли это для моей системы?</h4>
+            <p>Абсолютно. Мы работаем только со встроенными средствами Windows и BIOS. Мы не устанавливаем сомнительное ПО. Все изменения проходят тщательную проверку на стабильность, чтобы исключить любые сбои.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Как проходит оптимизация?</h4>
+            <p>Вы создаете тикет в нашем Discord. Мы обсуждаем ваше железо и цели. Затем подключаемся через демонстрацию экрана (вы сами нажимаете кнопки под нашим руководством). Мы объясняем каждое действие.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Что если станет хуже?</h4>
+            <p>Мы даем гарантию: если средний FPS не вырастет на 10% (кроме тарифов Basic и Memory Overclock, где цель — плавность), мы вернем вам деньги.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Сколько времени занимает оптимизация?</h4>
+            <p>В зависимости от тарифа: Basic занимает около 30 минут, Advanced — 1 час, а полная оптимизация с переустановкой Windows и тестами памяти может занять до 2-3 часов.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Работаете ли вы с ноутбуками?</h4>
+            <p>Да, мы оптимизируем и ноутбуки. Однако важно понимать, что возможности ноутбуков ограничены системой охлаждения. В некоторых случаях мы можем порекомендовать не делать разгон, чтобы избежать перегрева.</p>
+        </div>
+
+        <div class="faq-item">
+            <h4>Как проходит оплата?</h4>
+            <p>Оплата производится <strong>до</strong> начала работ (предоплата). Это гарантирует, что мастер забронировал для вас время. Мы работаем честно: если после оптимизации ваш FPS не вырастет хотя бы на 10% (кроме тарифов Basic и Memory Overclock), мы вернем вам 100% предоплаты без лишних вопросов.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>2026 CleanFrameOpti. Все права защищены.</p>
+        <p style="margin-top: 10px;">Связь: <a href="https://discord.gg/7W7MzS7UPf" target="_blank">Discord</a></p>
+    </footer>
+
+</body>
+</html>
